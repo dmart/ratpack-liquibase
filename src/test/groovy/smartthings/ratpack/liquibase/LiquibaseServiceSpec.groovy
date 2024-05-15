@@ -167,4 +167,32 @@ class LiquibaseServiceSpec extends Specification {
     private static boolean messageColumnExists(Sql sql) {
         return sql.firstRow("SELECT count(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'ratpack-liquibase' AND COLUMN_NAME = 'MESSAGE'").getAt(0) == 1
     }
+
+    def "use dedicated migration credentials if configured"() {
+        given:
+        String expectedUsername = "testUsername"
+        String expectedPassword = "testPassword"
+        LiquibaseModule.Config config = new LiquibaseModule.Config(username: expectedUsername, password: expectedPassword)
+        DataSource dataSource = Mock()
+        LiquibaseService service = new LiquibaseService(config, dataSource)
+
+        when:
+        service.constructConnection(dataSource)
+
+        then:
+        1 * dataSource.getConnection(expectedUsername, expectedPassword)
+    }
+
+    def "use the default credentials if username/password are null"() {
+        given:
+        LiquibaseModule.Config config = new LiquibaseModule.Config()
+        DataSource dataSource = Mock()
+        LiquibaseService service = new LiquibaseService(config, dataSource)
+
+        when:
+        service.constructConnection(dataSource)
+
+        then:
+        1 * dataSource.getConnection()
+    }
 }

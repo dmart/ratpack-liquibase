@@ -14,6 +14,8 @@ public class LiquibaseModule extends ConfigurableModule<LiquibaseModule.Config> 
     public static class Config {
         String migrationFile = "migrations.xml";
         String contexts = "";
+        String username;
+        String password;
         boolean autoMigrate = false;
 
         public String getMigrationFile() {
@@ -38,6 +40,22 @@ public class LiquibaseModule extends ConfigurableModule<LiquibaseModule.Config> 
 
         public void setAutoMigrate(boolean autoMigrate) {
             this.autoMigrate = autoMigrate;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
     }
 

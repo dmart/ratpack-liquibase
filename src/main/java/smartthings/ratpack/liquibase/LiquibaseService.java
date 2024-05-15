@@ -116,7 +116,11 @@ public class LiquibaseService implements Service {
     }
 
     DatabaseConnection constructConnection(DataSource dataSource) throws SQLException {
-        return new JdbcConnection(dataSource.getConnection());
+        if (config.username != null && config.password != null) {
+            return new JdbcConnection(dataSource.getConnection(config.username, config.password));
+        } else {
+            return new JdbcConnection(dataSource.getConnection());
+        }
     }
 
     Liquibase constructLiquibase(LiquibaseModule.Config config, DatabaseConnection connection)
